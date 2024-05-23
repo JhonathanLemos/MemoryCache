@@ -32,7 +32,18 @@ namespace MemoryCache.API
                 _cache.Set(MEMORY_CACHE_KEY, newItems);
 
             }
+
+
+
+            var products = await _cache.GetOrCreateAsync(MEMORY_CACHE_KEY, 
+            async e =>{
+                e.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(3600);
+                e.SlidingExpiration = TimeSpan.FromSeconds(1200);
+                return await _context.NewItem.ToListAsync();
+            })
+
             return Ok(newItems);
+
 
         }
 
